@@ -1,0 +1,53 @@
+/*** carousel ***/
+.carousel-block {
+	position: relative;
+	margin: 0 -10px;
+}
+.carousel-window {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.carousel-content {
+	float: left;
+	position: relative;
+	top: 0;
+	left: 0;
+	height: 100%;
+/*	width: 100%;	/*** change in js ***/
+	white-space: nowrap;
+	font-size: 0;
+}
+.carousel-content a {
+	display: inline-block;
+	height: 100%;
+}
+.carousel-endless-box {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+}
+.carousel-arrows a {
+	position: absolute;
+	top: 0;
+	width: 20px;
+	height: 100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: rgba(255,255,255,0.6);
+}
+.carousel-arrows a:hover {
+	background-color: rgba(255,255,255,0.8);
+}
+.carousel-arrows a.carousel-arrows-left {
+	left: 0;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='square' stroke-linejoin='square' stroke-width='2' d='m11 2-6 6 6 6'/%3e%3c/svg%3e");
+}
+.carousel-arrows a.carousel-arrows-right {
+	right: 0;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='square' stroke-linejoin='square' stroke-width='2' d='m5 14 6-6-6-6'/%3e%3c/svg%3e");
+}
+.carousel-arrows a.disabled {
+	opacity: 0.2;
+}
