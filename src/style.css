@@ -18,6 +18,10 @@
 	white-space: nowrap;
 	font-size: 0;
 }
+.carousel-content.carousel-nomination {
+	transition: none !important;
+	animation: none !important;
+}
 .carousel-content a {
 	display: inline-block;
 	height: 100%;

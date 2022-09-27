@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>Jquery Carousel</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width = device-width" />
+		<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous" />
+		<script src="../src/carousel.js"></script>
+		<link rel="stylesheet" href="../src/style.css" media="all" />
+		<!-- style for vertical -->
+		<style type="text/css">
+			.carousel-vertical {
+				width: 250px;
+			}
+			.carousel-vertical .carousel-window {
+				height: 600px;
+			}
+			.carousel-vertical .carousel-endless-box {
+				bottom: auto;
+			}
+			.carousel-content-vertical {
+				position: relative;
+			}
+			.carousel-content-vertical a {
+				display: block;
+				width: 100%;
+			}
+			.carousel-content-vertical img {
+				width: 100%;
+				height: auto;
+			}
+			.carousel-vertical .carousel-arrows-left {
+				top: 0;
+				left: 0;
+				height: 20px;
+				width: 100%;
+			}
+			.carousel-vertical .carousel-arrows-right {
+				top: auto;
+				right: auto;
+				bottom: 0;
+				left: 0;
+				height: 20px;
+				width: 100%;
+			}
+			.carousel-css .carousel-content {
+				transition: left 0.3s linear;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="bg-light shadow-sm">
+			<h1 class="container py-5">Jquery Carousel</h1>
+		</header>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Basic settings</h2>
+			<p>
+				<code>$("#carousel-1").carousel({});</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-1" class="carousel-window">
+					<div class="carousel-content">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Custom move and speed</h2>
+			<p>
+				<code>$("#carousel-2").carousel({move: "100%", speed: 0.3});</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-2" class="carousel-window">
+					<div class="carousel-content">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Endless with custom element</h2>
+			<p>
+				<code>$("#carousel-3").carousel({item: "span", endless: true});</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-3" class="carousel-window">
+					<div class="carousel-content">
+						<span><img src="../img/img_1.png" alt="Title" /></span>
+						<span><img src="../img/img_2.png" alt="Title" /></span>
+						<span><img src="../img/img_3.jpg" alt="Title" /></span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>With pagination</h2>
+			<p>
+				<code>$("#carousel-4").carousel({pager: true, pagerClass: "text-center", move: 3, perPage: 3});</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-4" class="carousel-window">
+					<div class="carousel-content">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>CSS animation</h2>
+			<p>
+				<code>$("#carousel-5").carousel({cssOnly: true});</code>
+			</p>
+			<p>
+				<code>.carousel-content { transition: left 0.3s linear; }</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-5" class="carousel-window carousel-css">
+					<div class="carousel-content">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Automatic scroll with Timer</h2>
+			<p>Require Timer (not included in carousel.js source)</p>
+			<p>
+				<code>$("#carousel-6").carousel({endless: true, pause: 1000});</code>
+			</p>
+			<pre>// universal timer
+function Timer(t,i){var n,e,o=!1,u=t,s=i;this.pause=function(){o=!0,n&&window.clearTimeout(n),s-=new Date-e},this.restart=function(t){void 0!==t&&(u=t),n&&window.clearTimeout(n),s=i,this.play()},this.play=function(){o=!1,e=new Date,n=window.setTimeout(u,s)},this.getTime=function(){return s},this.isPaused=function(){return o},this.play()};</pre>
+			<div class="carousel-block">
+				<div id="carousel-6" class="carousel-window">
+					<div class="carousel-content">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Multiple rows</h2>
+			<p>
+				<code>$("#carousel-7").carousel({rows: 2});</code>
+			</p>
+			<div class="carousel-block">
+				<div id="carousel-7" class="carousel-window">
+					<div class="carousel-content">
+						<div>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						</div>
+						<div>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+							<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+							<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="container my-5 p-4 shadow">
+			<h2>Vertical carousel</h2>
+			<p>
+				<code>$("#carousel-8").carousel({direction: "vertical", endless: true});</code>
+			</p>
+			<div class="carousel-block carousel-vertical">
+				<div id="carousel-8" class="carousel-window">
+					<div class="carousel-content-vertical">
+						<a href="../img/img_1_full.png"><img src="../img/img_1.png" alt="Title" /></a>
+						<a href="../img/img_2_full.png"><img src="../img/img_2.png" alt="Title" /></a>
+						<a href="../img/img_3_full.jpg"><img src="../img/img_3.jpg" alt="Title" /></a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<script>
+		//<![CDATA[
+			// universal timer
+			function Timer(t,i){var n,e,o=!1,u=t,s=i;this.pause=function(){o=!0,n&&window.clearTimeout(n),s-=new Date-e},this.restart=function(t){void 0!==t&&(u=t),n&&window.clearTimeout(n),s=i,this.play()},this.play=function(){o=!1,e=new Date,n=window.setTimeout(u,s)},this.getTime=function(){return s},this.isPaused=function(){return o},this.play()};
+		// ]]>
+		</script>
+
+		<script>
+		//<![CDATA[
+			$(function () {
+				$("#carousel-1").carousel({});
+
+				$("#carousel-2").carousel({move: "100%", speed: 0.3});
+
+				$("#carousel-3").carousel({item: "span", endless: true});
+
+				$("#carousel-4").carousel({pager: true, pagerClass: "text-center", move: 3, perPage: 3});
+
+				$("#carousel-5").carousel({cssOnly: true});
+
+				$("#carousel-6").carousel({endless: true, pause: 1000});
+
+				$("#carousel-7").carousel({rows: 2});
+
+				$("#carousel-8").carousel({direction: "vertical", endless: true});
+			});
+		// ]]>
+		</script>
+	</body>
+</html>

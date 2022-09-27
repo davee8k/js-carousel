@@ -3,13 +3,13 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.37.0
+ * @version 0.38.0
  * @license WTFNMFPL 1.0
  */
 (function ($) {
 	$.fn.carousel = function (option) {
 		var self = this;
-		this.page = option['page'] !== undefined ? option['page'] : 'a';
+		this.item = option['item'] !== undefined ? option['item'] : 'a';
 		this.arrowsClass = option['arrowsClass'] !== undefined ? option['arrowsClass'] : 'carousel-arrows';
 		this.move = option['move'] !== undefined ? option['move'] : 1;
 		this.pause = option['pause'] !== undefined ? option['pause'] : null;
@@ -19,17 +19,20 @@
 		this.sameSize = option['sameSize'] !== undefined ? option['sameSize'] : false;
 		this.rows = option['rows'] !== undefined ? option['rows'] : 1;
 		this.vertical = option['direction'] === 'vertical';
+		this.swipe = option['swipe'] !== undefined ? option['swipe'] : true;
 		this.way = this.vertical ? "top" : "left";
 		this.wayFill = this.vertical ? "bottom" : "right";
 
-		this.arrowsElm = null;
-		this.pagerElm = null;
+		this.elmArrow = null;
+		this.elmPager = null;
 		this.size = 0;
 		this.viewSize = 0;
 		this.count = 0;
 		this.borderTolerance = 20;
 		this.imgFix = 0; // remove main image from position counter
 		this.timer = false;
+		this.isSwiping = false;
+		this.position = null;
 
 		/**
 		 * Set corrent content width
@@ -38,10 +41,10 @@
 		 */
 		this.init = function (sameSize) {
 			this.viewSize = this.vertical ? $(this).height() : $(this).width();
-			this.count = Math.ceil($(this).find(this.page).not(".carousel-endless-box " + this.page).length / this.rows);
-			this.size = sameSize ? this.getItemSize($(this).find(this.page).first()) * this.count : this.getItemSize($(this).children());
+			this.count = Math.ceil($(this).find(this.item).not(".carousel-endless-box " + this.item).length / this.rows);
+			this.size = sameSize ? this.getItemSize($(this).find(this.item).first()) * this.count : this.getItemSize($(this).children());
 
-			var imgs = $(this).find(this.page).find("img").not(".carousel-endless-box " + this.page + " img");
+			var imgs = $(this).find(this.item).find("img").not(".carousel-endless-box " + this.item + " img");
 			if ($(imgs).length > 0) {
 				this.size = 0;
 				if (sameSize) {
@@ -49,16 +52,16 @@
 				}
 				else {
 					var loaded = 0;
-					$(imgs).each( function () {
+					$(imgs).slice(0, this.count).each( function () {
 						if ($(this).attr(self.vertical ? "height" : "width")) {
-							self.size += self.getItemSize($(this).closest(self.page));
+							self.size += self.getItemSize($(this).closest(self.item));
 							if (++loaded >= self.count) self.finishInit();
 						}
 						else {
 							var item = this;
 							var img = new Image();
 							$(img).one("load error", function() {
-								self.size += self.getItemSize($(item).closest(self.page));
+								self.size += self.getItemSize($(item).closest(self.item));
 								if (++loaded >= self.count) self.finishInit();
 							}).attr('src', $(item).data("src") || $(item).attr("src"));
 						}
@@ -80,7 +83,7 @@
 				var item = $(imgs).get(index);
 				var img = new Image();
 				$(img).one("load", function() {
-					self.size = self.getItemSize($(item).closest(self.page)) * self.count;
+					self.size = self.getItemSize($(item).closest(self.item)) * self.count;
 					self.finishInit();
 				}).one("error", function() {
 					self.loadOneAll(imgs, index + 1);
@@ -118,13 +121,15 @@
 		 */
 		this.createArrows = function (element) {
 			if (!element || $("#" + element).length === 0) {
-				this.elmArrow = $('<div ' + (element ? 'id="' + element + '"' : '') + ' class="' + this.arrowsClass + '">' +
+				this.elmArrow = $('<div' + (element ? ' id="' + element + '"' : '') + ' class="' + this.arrowsClass + '">' +
 					'<a href="#" class="' + this.arrowsClass + '-left"></a><a href="#" class="' + this.arrowsClass + '-right"></a></div>');
 				$(this).after(this.elmArrow);
 			}
-			else {
+			else if (element) {
 				this.elmArrow = $("#" + element);
 			}
+
+			// add actions
 			$(this.elmArrow).find('.' + this.arrowsClass + '-left').click( function () { return self.showNext(false); });
 			$(this.elmArrow).find('.' + this.arrowsClass + '-right').click( function () { return self.showNext(true); });
 
@@ -138,21 +143,26 @@
 		 */
 		this.createPager = function (element, elClass, perPage) {
 			var pages = Math.ceil(this.count / perPage);
-			if ($("#" + element).length === 0) {
-				$(this).after('<div id="' + element + '"' + (elClass ? ' class="' + elClass + '"' : '') + '></div>');
+			if (!element || $("#" + element).length === 0) {
+				this.elmPager = $('<div' + (element ? ' id="' + element + '"' : '') + (elClass ? ' class="' + elClass + '"' : '') + '></div>');
 				for (var i = 0; i < pages; i++) {
-					$("#" + element).append('<a href="#"><span>' + (i+1) + '</span></a>');
+					$(this.elmPager).append('<a href="#"><span>' + (i+1) + '</span></a>');
 				}
-				$("#" + element).children("a:first-child").addClass("select");
+				$(this.elmPager).children("a:first-child").addClass("active");
+				$(this).after(this.elmPager);
 			}
+			else if (element) {
+				this.elmPager = $("#" + element);
+			}
+
 			// add actions
-			for (var i = 0; i < pages; i++) {
-				$($('#' + element).find("a").get(i)).click( function () {
-					self.showNum(($(this).children('span').text() - 1) * perPage);
-					return false;
-				});
-			}
-			this.initPause("#" + element);
+			$(this.elmPager).find("a").click( function () {
+				var num = Number.parseInt($(this).children('span').text()) - 1;
+				$(self.elmPager).children("a").removeClass("active");
+				$(this).addClass("active");
+				return self.showNum(num * perPage);
+			});
+			this.initPause(this.elmPager);
 		};
 
 		/**
@@ -162,9 +172,9 @@
 			if (!this.endless && this.elmArrow !== null) {
 				var position = Math.round(this.getPosition($(this).children()));
 				$(this.elmArrow).find("a").removeClass('disabled');
-				if (position >= 0) $(this.elmArrow).find("." + this.arrowsClass +"-left").addClass('disabled');
+				if (position >= 0) $(this.elmArrow).find("." + this.arrowsClass +"-left").addClass("disabled");
 				if ((this.viewSize - position) >= this.size) {
-					$(this.elmArrow).find("." + this.arrowsClass +"-right").addClass('disabled');
+					$(this.elmArrow).find("." + this.arrowsClass +"-right").addClass("disabled");
 				}
 			}
 		};
@@ -183,10 +193,10 @@
 		};
 
 		/**
-		 *
+		 * Move view to new position
 		 * @param {DOMelement} element
-		 * @param {int} move
-		 * @param {int} position
+		 * @param {Integer} move
+		 * @param {Integer} position
 		 * @param {Boolean} skip
 		 */
 		this.animateTo = function (element, move, position, skip) {
@@ -205,7 +215,7 @@
 		};
 
 		/**
-		 *
+		 * Move view to next/previous item based on direction
 		 * @param {Boolean} direction
 		 * @returns {Boolean}
 		 */
@@ -213,13 +223,11 @@
 			var inner = $(this).children();
 			$(inner).finish();
 
-			var move = 0;
 			var space = 0;
-			var position = this.getPosition(inner);
 
 			// how much move
 			if (parseInt(this.move) === this.move) {
-				space = this.getItemSize(this.findFirstVisible());
+				space = this.getItemSize(this.findFirstVisible()) * this.move;
 			}
 			else if (this.move.indexOf("%") > 0) {
 				var percent = parseFloat(this.move.replace(/[^\d.]/g, ''));
@@ -229,36 +237,49 @@
 				space = this.move;
 			}
 
+			this.tryMove(inner, direction ? space : -space, false);
+			return false;
+		};
+
+		/**
+		 * Try to move view
+		 * @param {DomElement} inner
+		 * @param {Numeric} space
+		 * @param {Boolean} skip
+		 */
+		this.tryMove = function (inner, space, skip) {
+			var move = 0;
+			var position = this.getPosition(inner);
+
 			if (this.endless) {
-				if (!direction && position > 0) {
+				if (space < 0 && position > 0) {
 					position = position - (Math.ceil(position / this.size) * this.size);
 					this.animateTo(inner, position, 0, true);
 				}
-				else if (direction && (position - space) <= -this.size) {
+				else if (space > 0 && (position - space) <= -this.size) {
 					position = position - (Math.floor(position / this.size) * this.size);
 					this.animateTo(inner, position, 0, true);
 				}
 			}
 
 			// direction
-			if (direction) {
+			if (space > 0) {
 				if (this.endless || (-position + space + this.viewSize) < (this.size - this.borderTolerance)) move = position - space;
 				else move = -this.size + this.viewSize;
 			}
 			else {
-				if (this.endless || position + space < -this.borderTolerance) move = position + space;
+				if (this.endless || position - space < -this.borderTolerance) move = position - space;
 			}
 
 			if (this.endless || move <= 0) {
-				this.animateTo(inner, move, position);
+				this.animateTo(inner, move, position, skip);
 			}
 			if (this.timer) this.timer.restart();
-			return false;
 		};
 
 		/**
-		 *
-		 * @param {int} show
+		 * Move view to selected item
+		 * @param {Integer} show
 		 * @returns {Boolean}
 		 */
 		this.showNum = function (show) {
@@ -269,7 +290,7 @@
 			var position = this.getPosition($(this).children());
 
 			if (this.size > this.viewSize) {
-				var selectPosition = this.getPosition($(this).find(this.page)[show]);
+				var selectPosition = this.getPosition($(this).find(this.item)[show]);
 				if (this.size < (selectPosition + (this.viewSize / 2))) move = -this.size + this.viewSize;
 				else if ((this.viewSize / 2) < selectPosition) move = (this.viewSize / 2) - selectPosition;
 			}
@@ -279,16 +300,16 @@
 		};
 
 		/**
-		 *
-		 * @param {DOMelement} element
-		 * @returns {float}
+		 * Returns element position
+		 * @param {DOMelement} item
+		 * @returns {Number}
 		 */
-		this.getPosition = function (element) {
-			return $(element).position()[this.way];
+		this.getPosition = function (item) {
+			return $(item).position()[this.way];
 		};
 
 		/**
-		 *
+		 * Returns width/height of selected element based on orientation
 		 * @param {DOMelement} item
 		 */
 		this.getItemSize = function (item) {
@@ -297,12 +318,12 @@
 		}
 
 		/**
-		 *
+		 * Returns first visible item in carousel view
 		 * @returns {DOMelement}
 		 */
 		this.findFirstVisible = function () {
 			var position = Math.abs(this.getPosition($(this).children()));
-			var pages = $(this).find(this.page);
+			var pages = $(this).find(this.item);
 			for (var i = 0; i < pages.length; i++) {
 				if (position <= Math.ceil(this.getPosition($(pages).eq(i)))) return $(pages).eq(i);
 			}
@@ -311,7 +332,7 @@
 
 		if (this.init(this.sameSize)) {
 			if (option['arrows'] === undefined || option['arrows'] !== false) this.createArrows(typeof option['arrows'] === "boolean" ? "" : option['arrows']);
-			if (option['pager'] !== undefined && option['pager'] !== false) this.createPager(option['pager'], option['pagerClass'] !== undefined ? option['pagerClass'] : false, option['perPage'] !== undefined ? option['perPage'] : 1);
+			if (option['pager'] !== undefined && option['pager'] !== false) this.createPager(typeof option['pager'] === "boolean" ? "" : option['pager'], option['pagerClass'] !== undefined ? option['pagerClass'] : null, option['perPage'] !== undefined ? option['perPage'] : 1);
 			if (this.pause) {
 				this.timer = new Timer(function(){ self.showNext(true); }, this.pause);
 				this.initPause(this);
@@ -326,8 +347,45 @@
 			});
 		};
 
+		/**
+		 * Get new position for swipe
+		 * @param {UIEvent} e
+		 * @returns {Number}
+		 */
+		this.getEventPosition = function (e) {
+			if (e.originalEvent instanceof TouchEvent) e = e.originalEvent.touches[0];
+			return this.way === "top" ? e.clientY : e.clientX;
+		};
+
+		if (this.swipe) {
+			$(this).on("dragstart", function (e) {
+				e.preventDefault();
+			});
+			$(this).on("touchstart mousedown", function (e) {
+				$(self).children().addClass("carousel-nomination");
+				self.isSwiping = false;
+				self.position = self.getEventPosition(e);
+			});
+			$(this).on("touchmove mousemove",  function (e) {
+				if (self.position && self.position !== false) {
+					var old = self.position;
+					self.isSwiping = true;
+					self.position = self.getEventPosition(e);
+					self.tryMove($(this).children(), old - self.position, true);
+				}
+			});
+			$(this).on("touchend mouseup mouseleave", function (e) {
+				$(self).children().removeClass("carousel-nomination");
+				self.position = null;
+			});
+			$(this).on("click", function (e) {
+				if (self.isSwiping) e.preventDefault();
+			});
+		}
+
 		// public functions
 		return {
+			getCount: function () { return self.count; },
 			pause: function () { if (self.pause) self.timer.pause(); },
 			play: function () { if (self.pause) self.timer.play(); },
 			showNum: function (num) { self.showNum(num); },
