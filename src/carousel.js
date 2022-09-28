@@ -1,5 +1,5 @@
 /**
- * Jquery Carousel | options - sameSize	boolean; all images have same size - load only one image to find content size
+ * jQuery Carousel | options - sameSize	boolean; all images have same size - load only one image to find content size
  * min jquery version 1.9+
  *
  * @author DaVee8k

@@ -1,4 +1,4 @@
-# jquery-carousel - simple jQuery carousel
+# jquery-carousel - simple jQuery Carousel
 
 ## Description
 
