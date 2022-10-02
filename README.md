@@ -23,3 +23,9 @@ cssOnly     | boolean    | false      | use CSS animation - disable js animate
 sameSize    | boolean    | false      | is every carousel item same size
 swipe       | boolean    | true       | enable mouse/touch swipe
 direction   | string     | horizontal | "horizontal" or "vertical"
+
+## Usage
+
+```javascript
+$("#target").carousel({});
+```

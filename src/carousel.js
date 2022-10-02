@@ -3,7 +3,7 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.38.0
+ * @version 0.38.1
  * @license WTFNMFPL 1.0
  */
 (function ($) {
@@ -19,7 +19,6 @@
 		this.sameSize = option['sameSize'] !== undefined ? option['sameSize'] : false;
 		this.rows = option['rows'] !== undefined ? option['rows'] : 1;
 		this.vertical = option['direction'] === 'vertical';
-		this.swipe = option['swipe'] !== undefined ? option['swipe'] : true;
 		this.way = this.vertical ? "top" : "left";
 		this.wayFill = this.vertical ? "bottom" : "right";
 
@@ -357,7 +356,7 @@
 			return this.way === "top" ? e.clientY : e.clientX;
 		};
 
-		if (this.swipe) {
+		if (option['swipe'] !== false) {
 			$(this).on("dragstart", function (e) {
 				e.preventDefault();
 			});
