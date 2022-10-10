@@ -3,7 +3,7 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.38.1
+ * @version 0.38.2
  * @license WTFNMFPL 1.0
  */
 (function ($) {
@@ -29,7 +29,7 @@
 		this.count = 0;
 		this.borderTolerance = 20;
 		this.imgFix = 0; // remove main image from position counter
-		this.timer = false;
+		this.timer = null;
 		this.isSwiping = false;
 		this.position = null;
 
@@ -139,6 +139,7 @@
 		 * Create pager
 		 * @param {String} element
 		 * @param {String} elClass
+		 * @param {Integer} perPage
 		 */
 		this.createPager = function (element, elClass, perPage) {
 			var pages = Math.ceil(this.count / perPage);
