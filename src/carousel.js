@@ -3,7 +3,7 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.38.2
+ * @version 0.39.1
  * @license WTFNMFPL 1.0
  */
 (function ($) {
@@ -41,53 +41,52 @@
 		this.init = function (sameSize) {
 			this.viewSize = this.vertical ? $(this).height() : $(this).width();
 			this.count = Math.ceil($(this).find(this.item).not(".carousel-endless-box " + this.item).length / this.rows);
-			this.size = sameSize ? this.getItemSize($(this).find(this.item).first()) * this.count : this.getItemSize($(this).children());
 
 			var imgs = $(this).find(this.item).find("img").not(".carousel-endless-box " + this.item + " img");
 			if ($(imgs).length > 0) {
-				this.size = 0;
-				if (sameSize) {
-					this.loadOneAll(imgs, 0);
-				}
-				else {
-					var loaded = 0;
-					$(imgs).slice(0, this.count).each( function () {
-						if ($(this).attr(self.vertical ? "height" : "width")) {
-							self.size += self.getItemSize($(this).closest(self.item));
-							if (++loaded >= self.count) self.finishInit();
-						}
-						else {
-							var item = this;
-							var img = new Image();
-							$(img).one("load error", function() {
-								self.size += self.getItemSize($(item).closest(self.item));
-								if (++loaded >= self.count) self.finishInit();
-							}).attr('src', $(item).data("src") || $(item).attr("src"));
-						}
-					});
-				}
+				this.loadImages(sameSize ? $(imgs).first() : $(imgs).slice(0, this.count));
 			}
-			else self.finishInit();
-
+			else {
+				this.continueInit(sameSize);
+			}
 			return this.count > 1;
 		};
 
 		/**
-		 * Load only one image and multiply
-		 * @param {DOM[]} imgs
-		 * @param {Integer} index
+		 *
+		 * @param {Array} imgs
+		 * @param {Boolean} sameSize
 		 */
-		this.loadOneAll = function (imgs, index) {
-			if (index < this.count) {
-				var item = $(imgs).get(index);
+		this.loadImages = function (imgs, sameSize) {
+			var loaded = 0;
+			var total = $(imgs).length;
+			$(imgs).each( function () {
+				var item = this;
 				var img = new Image();
-				$(img).one("load", function() {
-					self.size = self.getItemSize($(item).closest(self.item)) * self.count;
-					self.finishInit();
-				}).one("error", function() {
-					self.loadOneAll(imgs, index + 1);
+				$(img).one("load error", function () {
+					if (++loaded >= total) self.continueInit(sameSize);
 				}).attr('src', $(item).data("src") || $(item).attr("src"));
+			});
+		};
+
+		/**
+		 *
+		 * @param {Boolean} sameSize
+		 */
+		this.continueInit = function (sameSize) {
+			this.size = 0;
+			if (sameSize) {
+				this.size = this.getItemSize($(this).find(this.item).first()) * this.count;
 			}
+			else {
+				var items = $(this).find(this.item).slice(0, this.count).get();
+				if (items) {
+					for (var i in items) {
+						this.size += this.getItemSize(items[i]);
+					}
+				}
+			}
+			this.finishInit();
 		};
 
 		/**
@@ -98,7 +97,7 @@
 				var inner = $(this).children();
 				var multiply = Math.max(1, Math.ceil(Math.floor(this.viewSize) / Math.ceil(this.size)));
 
-				if ($(inner).children(".carousel-endless-box").length === 0) {
+				if ($(inner).children(".carousel-endless-box").length === 0 && multiply !== Infinity) {
 					var filler = $(inner).html();
 					$(inner).append('<div class="carousel-endless-box carousel-endless-pre">');
 					$(inner).append('<div class="carousel-endless-box carousel-endless-post">');
@@ -129,8 +128,14 @@
 			}
 
 			// add actions
-			$(this.elmArrow).find('.' + this.arrowsClass + '-left').click( function () { return self.showNext(false); });
-			$(this.elmArrow).find('.' + this.arrowsClass + '-right').click( function () { return self.showNext(true); });
+			$(this.elmArrow).find('.' + this.arrowsClass + '-left').click( function (e) {
+				e.preventDefault();
+				self.showNext(false);
+			});
+			$(this.elmArrow).find('.' + this.arrowsClass + '-right').click( function (e) {
+				e.preventDefault();
+				self.showNext(true);
+			});
 
 			this.toggleArrows();
 		};
@@ -156,11 +161,12 @@
 			}
 
 			// add actions
-			$(this.elmPager).find("a").click( function () {
+			$(this.elmPager).find("a").click( function (e) {
+				e.preventDefault();
 				var num = Number.parseInt($(this).children('span').text()) - 1;
 				$(self.elmPager).children("a").removeClass("active");
 				$(this).addClass("active");
-				return self.showNum(num * perPage);
+				self.showNum(num * perPage);
 			});
 			this.initPause(this.elmPager);
 		};
@@ -217,7 +223,6 @@
 		/**
 		 * Move view to next/previous item based on direction
 		 * @param {Boolean} direction
-		 * @returns {Boolean}
 		 */
 		this.showNext = function (direction) {
 			var inner = $(this).children();
@@ -227,7 +232,7 @@
 
 			// how much move
 			if (parseInt(this.move) === this.move) {
-				space = this.getItemSize(this.findFirstVisible()) * this.move;
+				space = this.getItemSize(this.findFirstVisible(direction)) * this.move;
 			}
 			else if (this.move.indexOf("%") > 0) {
 				var percent = parseFloat(this.move.replace(/[^\d.]/g, ''));
@@ -238,7 +243,6 @@
 			}
 
 			this.tryMove(inner, direction ? space : -space, false);
-			return false;
 		};
 
 		/**
@@ -296,7 +300,7 @@
 			}
 
 			this.animateTo($(this).children(), move, position);
-			return false;
+			return true;
 		};
 
 		/**
@@ -305,7 +309,7 @@
 		 * @returns {Number}
 		 */
 		this.getPosition = function (item) {
-			return $(item).position()[this.way];
+			return Math.round($(item).position()[this.way]);
 		};
 
 		/**
@@ -315,19 +319,19 @@
 		this.getItemSize = function (item) {
 			if (this.vertical) return $(item).outerHeight(true);
 			return $(item).outerWidth(true);
-		}
+		};
 
 		/**
 		 * Returns first visible item in carousel view
 		 * @returns {DOMelement}
 		 */
-		this.findFirstVisible = function () {
+		this.findFirstVisible = function (direction) {
 			var position = Math.abs(this.getPosition($(this).children()));
 			var pages = $(this).find(this.item);
 			for (var i = 0; i < pages.length; i++) {
 				if (position <= Math.ceil(this.getPosition($(pages).eq(i)))) return $(pages).eq(i);
 			}
-			return null;
+			return $(pages).eq(direction ? 0 : this.count - 1);
 		};
 
 		if (this.init(this.sameSize)) {
@@ -353,7 +357,7 @@
 		 * @returns {Number}
 		 */
 		this.getEventPosition = function (e) {
-			if (e.originalEvent instanceof TouchEvent) e = e.originalEvent.touches[0];
+			if (window.TouchEvent && e.originalEvent instanceof TouchEvent) e = e.originalEvent.touches[0];
 			return this.way === "top" ? e.clientY : e.clientX;
 		};
 
