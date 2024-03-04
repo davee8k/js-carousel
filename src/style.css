@@ -1,7 +1,6 @@
 /*** carousel ***/
 .carousel-block {
 	position: relative;
-	margin: 0 -10px;
 }
 .carousel-window {
 	position: relative;
@@ -32,7 +31,7 @@
 	bottom: 0;
 	width: 100%;
 }
-.carousel-arrows a {
+.carousel-arrows button {
 	position: absolute;
 	top: 0;
 	width: 20px;
@@ -40,19 +39,21 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-color: rgba(255,255,255,0.6);
+	border: none;
+	cursor: pointer;
 }
-.carousel-arrows a:hover {
+.carousel-arrows button:hover {
 	background-color: rgba(255,255,255,0.8);
 }
-.carousel-arrows a.carousel-arrows-left {
+.carousel-arrows button.carousel-arrows-left {
 	left: 0;
 	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='square' stroke-linejoin='square' stroke-width='2' d='m11 2-6 6 6 6'/%3e%3c/svg%3e");
 }
-.carousel-arrows a.carousel-arrows-right {
+.carousel-arrows button.carousel-arrows-right {
 	right: 0;
 	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='square' stroke-linejoin='square' stroke-width='2' d='m5 14 6-6-6-6'/%3e%3c/svg%3e");
 }
-.carousel-arrows a.disabled {
+.carousel-arrows button.disabled {
 	opacity: 0.2;
 }
 

@@ -3,8 +3,8 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.39.1
- * @license WTFNMFPL 1.0
+ * @version 0.40.0
+ * @license https://unlicense.org/
  */
 (function ($) {
 	$.fn.carousel = function (option) {
@@ -116,11 +116,12 @@
 		/**
 		 * Create arrows
 		 * @param {String} element
+		 * @param {String} elClass
 		 */
-		this.createArrows = function (element) {
+		this.createArrows = function (element, elClass) {
 			if (!element || $("#" + element).length === 0) {
-				this.elmArrow = $('<div' + (element ? ' id="' + element + '"' : '') + ' class="' + this.arrowsClass + '">' +
-					'<a href="#" class="' + this.arrowsClass + '-left"></a><a href="#" class="' + this.arrowsClass + '-right"></a></div>');
+				this.elmArrow = $('<div' + (element ? ' id="' + element + '"' : '') + ' class="' + elClass + '">' +
+					'<button class="' + elClass + '-left"></button><button class="' + elClass + '-right"></button></div>');
 				$(this).after(this.elmArrow);
 			}
 			else if (element) {
@@ -128,11 +129,11 @@
 			}
 
 			// add actions
-			$(this.elmArrow).find('.' + this.arrowsClass + '-left').click( function (e) {
+			$(this.elmArrow).find('.' + elClass + '-left').click( function (e) {
 				e.preventDefault();
 				self.showNext(false);
 			});
-			$(this.elmArrow).find('.' + this.arrowsClass + '-right').click( function (e) {
+			$(this.elmArrow).find('.' + elClass + '-right').click( function (e) {
 				e.preventDefault();
 				self.showNext(true);
 			});
@@ -151,9 +152,9 @@
 			if (!element || $("#" + element).length === 0) {
 				this.elmPager = $('<div' + (element ? ' id="' + element + '"' : '') + (elClass ? ' class="' + elClass + '"' : '') + '></div>');
 				for (var i = 0; i < pages; i++) {
-					$(this.elmPager).append('<a href="#"><span>' + (i+1) + '</span></a>');
+					$(this.elmPager).append('<button><span>' + (i+1) + '</span></button>');
 				}
-				$(this.elmPager).children("a:first-child").addClass("active");
+				$(this.elmPager).children("button:first-child").addClass("active");
 				$(this).after(this.elmPager);
 			}
 			else if (element) {
@@ -161,10 +162,10 @@
 			}
 
 			// add actions
-			$(this.elmPager).find("a").click( function (e) {
+			$(this.elmPager).find("button").click( function (e) {
 				e.preventDefault();
 				var num = Number.parseInt($(this).children('span').text()) - 1;
-				$(self.elmPager).children("a").removeClass("active");
+				$(self.elmPager).children("button").removeClass("active");
 				$(this).addClass("active");
 				self.showNum(num * perPage);
 			});
@@ -335,7 +336,7 @@
 		};
 
 		if (this.init(this.sameSize)) {
-			if (option['arrows'] === undefined || option['arrows'] !== false) this.createArrows(typeof option['arrows'] === "boolean" ? "" : option['arrows']);
+			if (option['arrows'] === undefined || option['arrows'] !== false) this.createArrows(typeof option['arrows'] === "boolean" ? "" : option['arrows'], this.arrowsClass);
 			if (option['pager'] !== undefined && option['pager'] !== false) this.createPager(typeof option['pager'] === "boolean" ? "" : option['pager'], option['pagerClass'] !== undefined ? option['pagerClass'] : null, option['perPage'] !== undefined ? option['perPage'] : 1);
 			if (this.pause) {
 				this.timer = new Timer(function(){ self.showNext(true); }, this.pause);
