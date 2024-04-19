@@ -3,7 +3,7 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.40.0
+ * @version 0.40.1
  * @license https://unlicense.org/
  */
 (function ($) {
@@ -152,7 +152,7 @@
 			if (!element || $("#" + element).length === 0) {
 				this.elmPager = $('<div' + (element ? ' id="' + element + '"' : '') + (elClass ? ' class="' + elClass + '"' : '') + '></div>');
 				for (var i = 0; i < pages; i++) {
-					$(this.elmPager).append('<button><span>' + (i+1) + '</span></button>');
+					$(this.elmPager).append('<button type="button" data-item-no="' + (i + 1) + '"></button>');
 				}
 				$(this.elmPager).children("button:first-child").addClass("active");
 				$(this).after(this.elmPager);
@@ -164,7 +164,7 @@
 			// add actions
 			$(this.elmPager).find("button").click( function (e) {
 				e.preventDefault();
-				var num = Number.parseInt($(this).children('span').text()) - 1;
+				var num = Number.parseInt($(this).data('item-no')) - 1;
 				$(self.elmPager).children("button").removeClass("active");
 				$(this).addClass("active");
 				self.showNum(num * perPage);
@@ -178,7 +178,7 @@
 		this.toggleArrows = function () {
 			if (!this.endless && this.elmArrow !== null) {
 				var position = Math.round(this.getPosition($(this).children()));
-				$(this.elmArrow).find("a").removeClass('disabled');
+				$(this.elmArrow).find("button").removeClass('disabled');
 				if (position >= 0) $(this.elmArrow).find("." + this.arrowsClass +"-left").addClass("disabled");
 				if ((this.viewSize - position) >= this.size) {
 					$(this.elmArrow).find("." + this.arrowsClass +"-right").addClass("disabled");
