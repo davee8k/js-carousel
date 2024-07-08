@@ -3,7 +3,7 @@
  * min jquery version 1.9+
  *
  * @author DaVee8k
- * @version 0.40.1
+ * @version 0.40.2
  * @license https://unlicense.org/
  */
 (function ($) {
@@ -120,8 +120,8 @@
 		 */
 		this.createArrows = function (element, elClass) {
 			if (!element || $("#" + element).length === 0) {
-				this.elmArrow = $('<div' + (element ? ' id="' + element + '"' : '') + ' class="' + elClass + '">' +
-					'<button class="' + elClass + '-left"></button><button class="' + elClass + '-right"></button></div>');
+				this.elmArrow = $('<div' + (element ? ' id="' + element + '"' : '') + ' class="' + elClass + '" aria-hidden="true">' +
+					'<button class="' + elClass + '-left" tabindex="-1"></button><button class="' + elClass + '-right" tabindex="-1"></button></div>');
 				$(this).after(this.elmArrow);
 			}
 			else if (element) {
@@ -150,9 +150,9 @@
 		this.createPager = function (element, elClass, perPage) {
 			var pages = Math.ceil(this.count / perPage);
 			if (!element || $("#" + element).length === 0) {
-				this.elmPager = $('<div' + (element ? ' id="' + element + '"' : '') + (elClass ? ' class="' + elClass + '"' : '') + '></div>');
+				this.elmPager = $('<div' + (element ? ' id="' + element + '"' : '') + (elClass ? ' class="' + elClass + '"' : '') + ' aria-hidden="true"></div>');
 				for (var i = 0; i < pages; i++) {
-					$(this.elmPager).append('<button type="button" data-item-no="' + (i + 1) + '"></button>');
+					$(this.elmPager).append('<button type="button" data-item-no="' + (i + 1) + '" tabindex="-1"></button>');
 				}
 				$(this.elmPager).children("button:first-child").addClass("active");
 				$(this).after(this.elmPager);
@@ -324,6 +324,7 @@
 
 		/**
 		 * Returns first visible item in carousel view
+		 * @param {Boolean} direction
 		 * @returns {DOMelement}
 		 */
 		this.findFirstVisible = function (direction) {
